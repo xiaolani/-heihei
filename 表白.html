@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>For You ❤</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Microsoft YaHei', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        .heart {
+            font-size: 100px;
+            animation: heartbeat 1.2s infinite;
+            cursor: pointer;
+            display: inline-block;
+            filter: drop-shadow(0 0 20px #ff4b6e);
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.15); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+        }
+
+        .title {
+            color: #fff;
+            font-size: 36px;
+            margin: 20px 0;
+            opacity: 0;
+            animation: fadeIn 2s 0.5s forwards;
+        }
+
+        .message {
+            color: #ffb3c6;
+            font-size: 20px;
+            margin: 15px 0;
+            opacity: 0;
+            animation: fadeIn 2s 1.5s forwards;
+            line-height: 1.8;
+        }
+
+        .name {
+            color: #ff6b8a;
+            font-size: 28px;
+            font-weight: bold;
+            margin: 20px 0;
+            opacity: 0;
+            animation: fadeIn 2s 2.5s forwards;
+        }
+
+        .btn {
+            margin-top: 30px;
+            padding: 15px 50px;
+            font-size: 20px;
+            border: 2px solid #ff6b8a;
+            background: transparent;
+            color: #ff6b8a;
+            border-radius: 50px;
+            cursor: pointer;
+            opacity: 0;
+            animation: fadeIn 2s 3.5s forwards;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #ff6b8a;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(255, 107, 138, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* floating hearts background */
+        .floating-heart {
+            position: fixed;
+            color: #ff4b6e;
+            font-size: 20px;
+            animation: floatUp linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+        }
+
+        .reply {
+            display: none;
+            color: #fff;
+            font-size: 32px;
+            margin-top: 30px;
+            animation: fadeIn 1s forwards;
+        }
+
+        .reply .big-heart {
+            font-size: 80px;
+            display: block;
+            margin: 15px 0;
+            animation: heartbeat 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart">❤</div>
+        <div class="title">我喜欢你</div>
+        <div class="message">
+            遇见你是最美的意外<br>
+            你的笑容是我每天的期待<br>
+            余生很长，想和你一起走
+        </div>
+        <div class="name">—— 献给特别的你 ——</div>
+        <button class="btn" onclick="handleClick()">点我有惊喜</button>
+        <div class="reply" id="reply">
+            <span class="big-heart">💖</span>
+            谢谢你点开这个 ❤<br>
+            <small style="font-size:16px; color:#ffb3c6;">愿所有的美好都属于你</small>
+        </div>
+    </div>
+
+    <script>
+        // create floating hearts
+        function createHearts() {
+            const hearts = ['❤', '💕', '💖', '💗', '💓'];
+            for (let i = 0; i < 20; i++) {
+                const el = document.createElement('div');
+                el.className = 'floating-heart';
+                el.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.fontSize = (12 + Math.random() * 20) + 'px';
+                el.style.animationDuration = (6 + Math.random() * 8) + 's';
+                el.style.animationDelay = Math.random() * 10 + 's';
+                document.body.appendChild(el);
+            }
+        }
+        createHearts();
+
+        // click heart to burst particles
+        document.querySelector('.heart').addEventListener('click', function(e) {
+            for (let i = 0; i < 8; i++) {
+                const p = document.createElement('div');
+                p.textContent = '❤';
+                p.style.cssText = `
+                    position: fixed;
+                    left: ${e.clientX}px;
+                    top: ${e.clientY}px;
+                    font-size: 20px;
+                    pointer-events: none;
+                    z-index: 999;
+                    animation: burst 0.8s forwards;
+                    --dx: ${(Math.random() - 0.5) * 200}px;
+                    --dy: ${(Math.random() - 0.5) * 200}px;
+                `;
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 800);
+            }
+        });
+
+        // add burst keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes burst {
+                0% { transform: translate(0, 0) scale(1); opacity: 1; }
+                100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        function handleClick() {
+            document.querySelector('.btn').style.display = 'none';
+            document.getElementById('reply').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
